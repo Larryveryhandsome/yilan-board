@@ -1,4 +1,4 @@
-(function(){var M={"house": "house", "buy": "house", "school": "school", "trends": "data", "finance": "money", "impact": "money", "tender": "money", "speed": "gov", "policy": "gov", "council": "gov", "leader": "gov", "voice": "gov", "pop-change": "data", "numbers": "data", "radar": "data", "words": "data", "about": "data"},h=location.hash.slice(1),p=document.documentElement.getAttribute('data-page');
+(function(){var M={"house": "house", "buy": "house", "school": "school", "trends": "data", "finance": "money", "howbuy": "house", "impact": "money", "tender": "money", "speed": "gov", "policy": "gov", "council": "gov", "leader": "gov", "voice": "gov", "pop-change": "data", "numbers": "data", "radar": "data", "words": "data", "about": "data"},h=location.hash.slice(1),p=document.documentElement.getAttribute('data-page');
 if(p==='home'&&M[h]){location.replace(M[h]+'/#'+h)}})();
 (function(){var d=document;[].forEach.call(d.querySelectorAll('main section .sb table'),function(t){if(t.id||t.closest('details')||t.closest('.trc'))return;var b=t.tBodies[0];if(!b)return;
 var rs=[].slice.call(b.rows);if(rs.length<=7)return;function lab(){return '看全部 '+rs.length+' 列'}
