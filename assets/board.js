@@ -20,7 +20,7 @@ fit();scr();var rz;W.addEventListener('resize',function(){clearTimeout(rz);rz=se
 if(d.fonts&&d.fonts.ready)d.fonts.ready.then(function(){fit();scr()});
 function sbSet(s,o){s.classList.toggle('clip',o);if(s._bt){s._bt.setAttribute('aria-expanded',o?'false':'true');s._bt.textContent=o?'展開全部':'收起來'}}
 (function(){var H=W.innerHeight||800,lim=Math.max(420,Math.round(H*0.75));
-[].forEach.call(d.querySelectorAll('.sb'),function(s){if(s.scrollHeight<=lim*1.35)return;s.style.setProperty('--clip',lim+'px');
+[].forEach.call(d.querySelectorAll('.sb'),function(s){if(s.scrollHeight<=lim*1.35||s.querySelector('input[type=search],select'))return;s.style.setProperty('--clip',lim+'px');
  var bt=d.createElement('button');bt.type='button';bt.className='sbm';s._bt=bt;
  bt.onclick=function(){var o=!s.classList.contains('clip');sbSet(s,o);if(o)s.parentNode.scrollIntoView({block:'start'});scr()};
  s.parentNode.insertBefore(bt,s.nextSibling);sbSet(s,true)})})();
