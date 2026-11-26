@@ -177,6 +177,18 @@ footer{max-width:1080px;margin:0 auto;color:var(--muted);font-size:.875rem;paddi
 @media print{.gnav,.skip,.ctas,.opf,.fixf,.radar-q,#rmore{display:none!important} section,.tile{box-shadow:none;border:1px solid #ccc} .tile::after{display:none}
  .rv,.rv .hbar{opacity:1!important;transform:none!important} .hero>*{animation:none}}
 
+.spk{margin:10px 0 2px}
+.spw{position:relative}
+.spk .scol rect{fill:var(--accent);opacity:.75}
+.spk svg{display:block;width:100%;height:46px;overflow:visible}
+.spk .sl{fill:none;stroke:var(--accent);stroke-width:2.2;stroke-linejoin:round;stroke-linecap:round}
+.spk .sa{fill:var(--accent);opacity:.1;stroke:none}
+.spk .sd{position:absolute;width:9px;height:9px;margin:-4.5px 0 0 -4.5px;border-radius:50%;background:var(--accent);box-shadow:0 0 0 2px var(--card)}
+.spk .sx{display:flex;justify-content:space-between;font-size:.78rem;color:var(--muted);margin-top:3px}
+.spb{height:12px;border-radius:6px;background:var(--line);margin:12px 0 4px;overflow:hidden}
+.spb .spf{height:100%;border-radius:6px;background:var(--accent)}
+.tile .say{margin:6px 0 4px;font-size:.95rem;line-height:1.55;color:var(--fg)}
+@media (max-width:480px){.tile .say{font-size:.86rem;line-height:1.5}.spk svg{height:38px}}
 .tocp li.tg{font-size:.8rem;font-weight:700;color:var(--muted);letter-spacing:.08em;padding:14px 12px 2px}
 .tocp li.tg:first-child{padding-top:6px}
 .phero{padding:clamp(16px,3vw,28px) 0 4px}
