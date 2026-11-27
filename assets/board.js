@@ -12,6 +12,7 @@ bt.onclick=function(){var o=bt.getAttribute('aria-expanded')==='true';rs.forEach
 var w=t.closest('.tw')||t;w.parentNode.insertBefore(bt,w.nextSibling)})})();
 
 (function(){var d=document,h=d.documentElement,W=window,RM=W.matchMedia&&W.matchMedia('(prefers-reduced-motion: reduce)').matches;
+d.addEventListener('touchstart',function(){},{passive:true});
 var b=d.getElementById('bigbtn'),nav=d.getElementById('nav'),toc=d.getElementById('toc');
 function fit(){h.classList.remove('tocmode');if(getComputedStyle(nav).display!=='none'&&nav.scrollWidth>nav.clientWidth+1)h.classList.add('tocmode')}
 function scr(){[].forEach.call(d.querySelectorAll('.tw'),function(w){var o=w.clientWidth>0&&w.scrollWidth>w.clientWidth+1;w.classList.toggle('scr',o);

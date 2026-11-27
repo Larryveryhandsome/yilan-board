@@ -73,6 +73,18 @@ html.tocmode #nav{display:none} html.tocmode .toc{display:block}
 @media (hover:hover){#nav a:hover{opacity:1} #bigbtn:hover,.btn:hover{opacity:.88} .lnk:hover{text-decoration:underline}
  .tile:hover{transform:translateY(-4px)} .tile:hover::after{opacity:1} .tile:hover .tm span{transform:translateX(3px)} .tocp a:hover{background:var(--bg)}
  .chip:hover span{opacity:.85} .opf button:hover,button.agree:hover,button.more:hover,.fixf button:hover{opacity:.88}}
+/* 11/27 店長：「手機點下去也要有回饋」→ 每個能點的東西按下時都有變化（底色、縮一下、變淡），手指一放開就恢復 */
+a,button,summary,[role=button],.bbg{-webkit-tap-highlight-color:transparent}
+#nav a:active,.lnk:active,.hdm a:active,.evs a:active,.flinks a:active,.sub a:active,main p a:active{opacity:.55}
+.evl li:active{background:var(--chip)}
+.evl li:active .evi i,.evl li:hover:active .evi i{transform:scale(.9);background:var(--card);transition-duration:.1s}
+.evl summary:active .evm{opacity:.6}
+.cat2:active{transform:scale(.97);transition-duration:.15s}
+.vbar:active{transform:scale(.98)} .vbar:active .go{opacity:.6}
+.hd1:has(a:active){background:var(--chip)}
+a:not(.tile):not(.cat):not(.cat2):not(.vbar):active{opacity:.55}
+summary:active{opacity:.7} button:not(:disabled):active{opacity:.8} .bbg:active{opacity:.75}
+@media (prefers-reduced-motion:reduce){.tile:active,.cat:active,.cat2:active,.vbar:active,.toc>summary:active,.tocp a:active,#bigbtn:active,.btn:active,.sbm:active,.chip:active span,.opf button:active,button.agree:active,button.more:active,.fixf button:active,.pchips a:active,.evl li:active .evi i,.evl li:hover:active .evi i,.bchips button:active,.cqb:active,.bbg:active .bbc{transform:none!important} .tile:active,.cat:active,.cat2:active,.vbar:active,.toc>summary:active,#bigbtn:active,.btn:active{opacity:.7}}
 section{background:var(--card);border-radius:22px;padding:clamp(18px,3vw,32px) clamp(16px,3vw,36px);margin-top:16px;min-width:0;box-shadow:var(--shadow);scroll-margin-top:calc(env(safe-area-inset-top,0px) + 72px)}
 h2{font-size:clamp(1.3rem,2.8vw,1.75rem);line-height:1.3;margin:0 0 12px;font-weight:700;text-wrap:balance;letter-spacing:.01em;display:flex;align-items:center;gap:12px}
 h2 .ic{flex:0 0 auto;display:flex;align-items:center;justify-content:center;width:40px;height:40px;border-radius:12px;background:var(--simple);color:var(--accent)} h2 .ic svg{width:22px;height:22px}
@@ -239,7 +251,7 @@ footer{max-width:1080px;margin:0 auto;color:var(--muted);font-size:.875rem;paddi
 .nowc h3{margin:0 0 10px;font-size:1.05rem}
 .evl{list-style:none;margin:0;padding:0;display:grid;gap:10px}
 .evl li{display:flex;gap:12px;align-items:center;padding:8px 10px;margin:0 -10px;border-radius:14px;transition:background-color .2s var(--ease)}
-.evl li:hover{background:var(--chip)}
+@media (hover:hover){.evl li:hover{background:var(--chip)}}
 .evl details{flex:1 1 auto;min-width:0}.evl summary{display:flex;gap:12px;align-items:center;cursor:pointer;list-style:none;border-radius:12px}.evl summary::-webkit-details-marker{display:none}
 .evl summary:focus-visible{outline:2px solid var(--accent);outline-offset:4px}
 .evm{color:var(--accent)!important;font-weight:600}.evc{display:inline-block;margin-left:4px;transition:transform .2s var(--ease)}.evl details[open] .evc{transform:rotate(180deg)}.evl details[open] .evm{font-size:0}.evl details[open] .evm::before{content:"收起來";font-size:.84rem}.evl details[open] .evc{font-size:.84rem}
@@ -247,7 +259,7 @@ footer{max-width:1080px;margin:0 auto;color:var(--muted);font-size:.875rem;paddi
 @media (max-width:560px){.evd{margin-left:0}}
 .evi{flex:0 0 58px;display:flex;flex-direction:column;align-items:center;gap:3px;color:var(--accent)}
 .evi i{width:44px;height:44px;border-radius:12px;background:var(--chip);display:grid;place-items:center;transition:transform .2s var(--ease),background-color .2s var(--ease)}
-.evl li:hover .evi i{transform:scale(1.12);background:var(--card)}
+@media (hover:hover){.evl li:hover .evi i{transform:scale(1.12);background:var(--card)}}
 .evi svg{width:26px;height:26px}.evi em{font-style:normal;font-size:.74rem;color:var(--muted);white-space:nowrap}
 .evl li.evp .evi{color:var(--muted)}
 .evk{display:inline}.evk svg{display:inline-block;width:1.05em;height:1.05em;vertical-align:-.18em;margin-right:4px}
