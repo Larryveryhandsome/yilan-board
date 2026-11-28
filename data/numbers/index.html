@@ -88,7 +88,7 @@ details summary{cursor:pointer;font-size:14px;color:var(--accent);margin-top:6px
 <body>
 <div class="wrap">
 <header>
-  <p class="mute"><a href="../../">← 回宜蘭監控台首頁</a>｜<a href="../">查資料</a>｜非政府機關網站</p>
+  <p class="mute"><a href="../../">← 回宜蘭監控台首頁</a>｜<a href="../">數據庫</a>｜非政府機關網站</p>
   <p class="mute">最後更新：2026-11-28｜數字有錯？<a href="../#about">回報更正</a></p>
   <h1>宜蘭數字大全：宜蘭大概有多少人在做某件事</h1>
   <p class="sub" id="lead"></p>
@@ -165,7 +165,8 @@ details summary{cursor:pointer;font-size:14px;color:var(--accent);margin-top:6px
 <section id="all">
   <h2>全部指標</h2>
   <p class="sub" id="allcount"></p>
-  <div class="chips" id="f-topic"><span class="t">主題</span></div>
+  <div class="chips" id="f-cat"><span class="t">大分類</span></div>
+  <div class="chips" id="f-topic"><span class="t">小分類</span></div>
   <div class="chips" id="f-conf"><span class="t">可信度</span></div>
   
   
@@ -343,14 +344,20 @@ if ($('#lines')) $('#lines').innerHTML = DATA.lines.map(l => { const i = IND[l.i
   return `<button class="ind" data-ind="${l.id}"><span class="n" style="font-size:15.5px">${esc(l.text)}</span><span class="d"></span><span class="b">${conf(i.confidence)}<span class="badge">${esc(i.convert)}</span><span class="badge">給：${esc(l.who)}</span><span class="badge">${esc(l.brands)}</span></span></button>`; }).join('');
 
 const F = {topic: '全部', conf: '全部', use: '全部', brand: '全部', q: ''};
-const topics = ['全部', ...new Set(DATA.indicators.map(i => i.topic))];
+const CATS = [["people", "人口與家庭", ["人口", "鄉鎮人口", "常住人口", "家庭收支"]], ["school", "學生與學校", ["國小學生", "國中學生", "補習"]], ["shops", "店家與行業", ["店家數", "鄉鎮店家", "各行業", "重點行業", "新開的店", "店家生意"]], ["travel", "觀光與住宿", ["旅遊", "旅宿", "鄉鎮旅宿"]], ["train", "火車站進出", ["火車站", "各火車站", "火車站歷年", "各火車站歷年"]], ["life", "吃飯與生活習慣", ["早餐", "外食", "運動", "週六早上", "上班型態"]]];
+const catOf = t => (CATS.find(c => c[2].includes(t)) || [0, '其他'])[1];
+const catNames = ['全部', ...CATS.map(c => c[1]).filter(n => DATA.indicators.some(i => catOf(i.topic) === n)), ...(DATA.indicators.some(i => catOf(i.topic) === '其他') ? ['其他'] : [])];
+F.cat = '全部';
+function fromHash(){ const c = CATS.find(c => 'c-' + c[0] === decodeURIComponent(location.hash.slice(1))); if (c) { F.cat = c[1]; F.topic = '全部'; return true; } return false; }
 function drawAll(){
+  chips('#f-cat', catNames, F.cat, v => { F.cat = v; F.topic = '全部'; drawAll(); }, true);
+  const topics = ['全部', ...new Set(DATA.indicators.filter(i => F.cat === '全部' || catOf(i.topic) === F.cat).map(i => i.topic))];
   chips('#f-topic', topics, F.topic, v => { F.topic = v; drawAll(); }, true);
   chips('#f-conf', ['全部', '高', '中', '低'], F.conf, v => { F.conf = v; drawAll(); }, true);
   
   
   const q = F.q.trim();
-  const rows = DATA.indicators.filter(i => (F.topic === '全部' || i.topic === F.topic) && (F.conf === '全部' || i.confidence === F.conf)
+  const rows = DATA.indicators.filter(i => (F.cat === '全部' || catOf(i.topic) === F.cat) && (F.topic === '全部' || i.topic === F.topic) && (F.conf === '全部' || i.confidence === F.conf)
     
     && (!q || (i.name + i.display + i.note + i.area + i.id).includes(q)));
   $('#shown').textContent = `符合 ${rows.length} 個`;
@@ -358,7 +365,10 @@ function drawAll(){
 }
 $('#allcount').textContent = `一共 ${DATA.indicators.length} 個。用下面的按鈕挑，點任何一個看算式和來源。`;
 $('#q').addEventListener('input', e => { F.q = e.target.value; drawAll(); });
+const hashed = fromHash();
 drawAll();
+if (hashed) $('#all').scrollIntoView();
+window.addEventListener('hashchange', () => { if (fromHash()) { drawAll(); $('#all').scrollIntoView(); } });
 
 let srcF = '已整理';
 function drawSrc(){
