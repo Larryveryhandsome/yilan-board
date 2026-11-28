@@ -3,13 +3,69 @@ if(im.length<2||matchMedia('(prefers-reduced-motion: reduce)').matches)return;
 addEventListener('load',function(){[].forEach.call(im,function(x){if(!x.getAttribute('src'))x.src=x.getAttribute('data-src')});
 setInterval(function(){if(document.hidden)return;im[i].classList.remove('on');i=(i+1)%im.length;im[i].classList.add('on');var x=im[i],a=c.querySelectorAll('a');
 a[0].textContent=x.getAttribute('data-c');a[0].href=x.getAttribute('data-u');a[1].textContent=x.getAttribute('data-l');a[1].href=x.getAttribute('data-lu')},7000)})})();
+(function(){var d=document,j=d.getElementById('tmj');if(!j)return;var P=JSON.parse(j.textContent),pop=d.getElementById('tmpop'),cur=null,coarse=matchMedia('(hover: none)').matches;
+function esc(s){return String(s).replace(/[&<>"']/g,function(c){return'&#'+c.charCodeAt(0)+';'})}
+function sec(t,a){return a.length?'<p><i>'+t+'</i>'+a.map(esc).join('<br>')+'</p>':''}
+function html(p){var h='<b>'+esc(p.n)+'</b><small>'+esc(p.t)+'</small>'+sec('學歷',p.edu)+sec('經歷',p.exp)+sec('事蹟',p.hon);if(!p.edu.length&&!p.exp.length)h+='<p>縣府官網的介紹頁沒有列學經歷。</p>';
+h+='<span class=tpf>出處：<a href="'+esc(p.u)+'" target=_blank rel=noopener>宜蘭縣政府官網</a>'+(p.d?'（頁面更新 '+esc(p.d)+'）':'')+'</span>';if(coarse)h+='<span class=tpb><a href="'+esc(p.go)+'">看職掌和電話 ›</a><button type=button class=tpx>關閉</button></span>';return h}
+function show(li){var p=P[li.getAttribute('data-p')];if(!p)return;cur=li;pop.innerHTML=html(p);pop.hidden=false;if(coarse){pop.className='tps';pop.setAttribute('role','dialog');var x=pop.querySelector('.tpx');if(x)x.focus();return}
+pop.className='';var r=li.getBoundingClientRect(),w=pop.offsetWidth,x2=Math.min(Math.max(8,r.left+r.width/2-w/2),innerWidth-w-8),y=r.bottom+6;if(y+pop.offsetHeight>innerHeight-8)y=Math.max(8,r.top-pop.offsetHeight-6);pop.style.left=x2+'px';pop.style.top=y+'px'}
+function hide(){pop.hidden=true;var c=cur;cur=null;if(coarse&&c){var a=c.querySelector('a');if(a)a.focus()}}
+[].forEach.call(d.querySelectorAll('.tml li[data-p]'),function(li){var a=li.querySelector('a');if(!P[li.getAttribute('data-p')])return;
+if(coarse){a.addEventListener('click',function(ev){ev.preventDefault();show(li)})}
+else{li.addEventListener('mouseenter',function(){show(li)});li.addEventListener('mouseleave',function(ev){if(!pop.contains(ev.relatedTarget))hide()});
+a.addEventListener('focus',function(){show(li)});a.addEventListener('blur',function(){setTimeout(function(){if(!pop.contains(d.activeElement)&&cur===li)hide()},60)})}});
+pop.addEventListener('mouseleave',function(ev){if(!coarse&&!(cur&&cur.contains(ev.relatedTarget)))hide()});
+pop.addEventListener('click',function(ev){if(ev.target.classList.contains('tpx'))hide()});
+d.addEventListener('keydown',function(ev){if(ev.key==='Escape'&&!pop.hidden)hide()});addEventListener('scroll',function(){if(!coarse&&!pop.hidden)hide()},{passive:true})})();
+(function(){var d=document,A="https://yilan.zengzhisui.com/api/",t0=Date.now();if(!A)return;
+var b=d.querySelector('.hban');if(b){var O=A.replace(/api\/$/,''),c=b.querySelector('.hbc'),art=c?c.textContent:'';
+fetch(A+'photos').then(function(r){return r.json()}).then(function(j){var ps=(j&&j.photos)||[];if(!ps.length)return;ps=ps.slice(0,12);
+var ims=ps.map(function(p){var i=d.createElement('img');i.alt='';i.decoding='async';i.src=O+'photo/'+p.id+'.jpg';b.insertBefore(i,b.querySelector('.hbt'));return i});
+var k=-1,rm=matchMedia('(prefers-reduced-motion: reduce)').matches;
+function cap(){if(!c)return;if(k<0){c.textContent=art;return}var p=ps[k];c.textContent='攝影：'+p.name+'・'+p.town+(p.caption?'・'+p.caption:'')+' ';var x=d.createElement('button');x.type='button';x.className='hrp';x.textContent='檢舉這張';
+x.onclick=function(){fetch(A+'photo_report',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({id:p.id,ms:Date.now()-t0})}).then(function(r){return r.json()}).then(function(j){c.textContent=j.msg||'已收到。'}).catch(function(){})};c.appendChild(x)}
+function go(n){if(k>=0)ims[k].classList.remove('on');k=n;if(k>=0)ims[k].classList.add('on');cap()}
+ims[0].addEventListener('load',function(){go(0)});if(rm||ims.length<1)return;setInterval(function(){if(d.hidden)return;go(k+1>=ims.length?-1:k+1)},7000)}).catch(function(){})}
+var f=d.querySelector('.upf');if(f){var m=f.querySelector('.upm'),pv=f.querySelector('.upv'),data='';function say(t,ok){m.textContent=t;m.className='upm'+(ok?' ok':'')}
+f.f.addEventListener('change',function(){data='';pv.hidden=true;var x=f.f.files[0];if(!x)return;if(!/^image\//.test(x.type)){say('請選照片檔。');return}say('處理照片中…');
+(window.createImageBitmap?createImageBitmap(x):Promise.reject()).then(function(bm){var s=Math.min(1,1920/Math.max(bm.width,bm.height)),cv=d.createElement('canvas');cv.width=Math.round(bm.width*s);cv.height=Math.round(bm.height*s);cv.getContext('2d').drawImage(bm,0,0,cv.width,cv.height);
+if(Math.min(cv.width,cv.height)<400){say('照片太小了，請選清楚一點的。');return}data=cv.toDataURL('image/jpeg',.88);pv.src=data;pv.hidden=false;say('')}).catch(function(){say('讀不到這張照片，請換一張（建議 JPG）。')})});
+f.addEventListener('submit',function(ev){ev.preventDefault();if(!data){say('請先選一張照片。');return}if(!f.town.value){say('請選拍攝的鄉鎮市。');return}if(!f.ok.checked){say('請勾選同意。');return}
+var bt=f.querySelector('.upgo');bt.disabled=true;say('上傳中…');
+fetch(A+'photo',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({img:data,town:f.town.value,name:f.nm.value,caption:f.cap.value,ok_rights:1,hp:f.hp.value,ms:Date.now()-t0})})
+.then(function(r){return r.json()}).then(function(j){bt.disabled=false;if(j.ok&&j.code){say(j.msg+' 查詢碼：'+j.code+'（請截圖保存）',1);try{localStorage.setItem('yl_photo_code',j.code)}catch(x){}var q2=d.querySelector('.uqf');if(q2)q2.code.value=j.code;f.reset();data='';pv.hidden=true}else say(j.msg||'沒有送出，請再試一次。')})
+.catch(function(){bt.disabled=false;say('網路連不上，請稍後再試。')})})}
+var q=d.querySelector('.uqf');if(q){try{var sc=localStorage.getItem('yl_photo_code');if(sc)q.code.value=sc}catch(x){}
+q.addEventListener('submit',function(ev){ev.preventDefault();var k2=(ev.submitter&&ev.submitter.value)||'status',qm=q.querySelector('.uqm');qm.textContent='查詢中…';
+fetch(A+(k2==='withdraw'?'photo_withdraw':'photo_status'),{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({code:q.code.value,ms:Date.now()-t0})}).then(function(r){return r.json()}).then(function(j){qm.textContent=j.msg||''}).catch(function(){qm.textContent='網路連不上，請稍後再試。'})})}})();
+(function(){var d=document,R={"學生": ["school"], "18–29 歲": ["house", "buy", "howbuy", "trends"], "30–44 歲": ["house", "buy", "school"], "45–64 歲": ["impact", "school", "house"], "65 歲以上": ["impact", "policy", "speed", "team"], "上班": ["house", "buy", "speed", "trends"], "創業／做生意": ["tender", "finance", "impact", "trends"], "找工作": ["trends", "policy", "tender"], "家裡有學生": ["school"], "想買房": ["house", "buy", "howbuy"], "務農／漁業": ["policy", "impact", "council"], "退休": ["impact", "policy", "speed", "team"], "不住宜蘭": ["trends", "house", "leader"]},N={"house": "房價", "buy": "買房試算", "howbuy": "買房步驟", "school": "升學", "impact": "預算分類", "team": "縣府團隊", "trends": "趨勢", "finance": "欠多少錢", "tender": "錢花在哪", "speed": "辦事天數", "policy": "縣府施政", "council": "議會", "leader": "施政摘錄", "voice": "意見箱", "numbers": "基本數字", "radar": "找資料", "words": "名詞解釋", "pop-change": "出生死亡"},M={"house": "house", "buy": "house", "school": "school", "trends": "data", "team": "gov", "finance": "money", "howbuy": "house", "impact": "money", "tender": "money", "speed": "gov", "policy": "gov", "council": "gov", "leader": "gov", "voice": "gov", "pop-change": "data", "numbers": "data", "radar": "data", "words": "data", "about": "data"},K='yl_id',st=null;try{st=JSON.parse(localStorage.getItem(K)||'null')}catch(x){st={god:true,nosave:1}}
+function rel(s){var o=[];if(!s||s.god)return o;(s.tags||[]).forEach(function(t){(R[t]||[]).forEach(function(a){if(o.indexOf(a)<0)o.push(a)})});return o}
+function mark(s){var A2=rel(s);[].forEach.call(d.querySelectorAll('.mineb'),function(x){x.remove()});[].forEach.call(d.querySelectorAll('.tile.mine'),function(x){x.classList.remove('mine')});
+A2.forEach(function(a){var h=d.querySelector('section#'+a+' h2');if(h){var bd=d.createElement('span');bd.className='mineb';bd.textContent='跟你有關';h.appendChild(bd)}});
+var tl=d.querySelector('#glance .tiles');if(tl){var ts=[].slice.call(tl.children);ts.sort(function(x,y){var i=A2.indexOf(x.getAttribute('data-k')),k=A2.indexOf(y.getAttribute('data-k'));return(i<0?99:i)-(k<0?99:k)});ts.forEach(function(t){if(A2.indexOf(t.getAttribute('data-k'))>=0)t.classList.add('mine');tl.appendChild(t)})}
+var bar=d.querySelector('.idbar');if(!bar)return;bar.hidden=false;var t=bar.querySelector('.idt'),pk=bar.querySelector('.idpick');pk.textContent='';
+if(!s||s.god){t.textContent='上帝視角：所有資訊都給你看';bar.querySelector('.idgo2').hidden=true;return}bar.querySelector('.idgo2').hidden=false;
+t.textContent='你的身分：'+[s.age,s.sex,(s.tags||[]).filter(function(x){return x!==s.age}).join('、'),s.town].filter(Boolean).join('｜')+'。先給你看：';
+A2.forEach(function(a){if(!M[a])return;var l=d.createElement('a');l.href=M[a]+'/#'+a;l.textContent=N[a]||a;pk.appendChild(l)});if(!pk.children.length)t.textContent+='（目前都在下面）'}
+function save(s){st=s;try{localStorage.setItem(K,JSON.stringify(s))}catch(x){}mark(s)}
+var g=d.getElementById('idg');if(g){var last=null;function open(){last=d.activeElement;g.hidden=false;d.body.style.overflow='hidden';var f1=g.querySelector('input');if(f1)f1.focus()}
+function close(){g.hidden=true;d.body.style.overflow='';if(last&&last.focus)last.focus()}
+function val(n){var x=g.querySelector('input[name='+n+']:checked');return x?x.value:''}
+g.querySelector('.idok').onclick=function(){var tags=[].map.call(g.querySelectorAll('input[name=job]:checked'),function(x){return x.value}),a=val('age'),tw=g.querySelector('select').value;if(a)tags.unshift(a);if(tw==='不住宜蘭')tags.push(tw);save({v:1,god:false,age:a,sex:val('sex'),tags:tags,town:tw});close()};
+g.querySelector('.idgod').onclick=function(){save({v:1,god:true});close()};
+g.addEventListener('keydown',function(ev){if(ev.key==='Escape'){save({v:1,god:true});close()}if(ev.key==='Tab'){var fs=g.querySelectorAll('input,select,button'),a1=fs[0],z=fs[fs.length-1];if(ev.shiftKey&&d.activeElement===a1){ev.preventDefault();z.focus()}else if(!ev.shiftKey&&d.activeElement===z){ev.preventDefault();a1.focus()}}});
+var bar=d.querySelector('.idbar');if(bar){bar.querySelector('.idch').onclick=open;bar.querySelector('.idgo2').onclick=function(){save({v:1,god:true})}}
+if(!st)open()}
+mark(st||{god:true})})();
 (function(){var M={"house": "house", "buy": "house", "school": "school", "trends": "data", "team": "gov", "finance": "money", "howbuy": "house", "impact": "money", "tender": "money", "speed": "gov", "policy": "gov", "council": "gov", "leader": "gov", "voice": "gov", "pop-change": "data", "numbers": "data", "radar": "data", "words": "data", "about": "data"},h=location.hash.slice(1),p=document.documentElement.getAttribute('data-page');
 if(p==='home'&&M[h]){location.replace(M[h]+'/#'+h)}})();
 (function(){var d=document;[].forEach.call(d.querySelectorAll('main section .sb table'),function(t){if(t.id||t.closest('details')||t.closest('.trc'))return;var b=t.tBodies[0];if(!b)return;
-var rs=[].slice.call(b.rows);if(rs.length<=7)return;function lab(){return '看全部 '+rs.length+' 列'}
+var rs=[].slice.call(b.rows);if(rs.length<=7)return;function lab(){return '看全部 '+(rs.length-(b.rows[0]&&b.rows[0].querySelector('th')?1:0))+' 列'}
 rs.forEach(function(r,i){if(i>=5)r.hidden=true});var bt=d.createElement('button');bt.type='button';bt.className='sbm tmore';bt.setAttribute('aria-expanded','false');bt.textContent=lab();
 bt.onclick=function(){var o=bt.getAttribute('aria-expanded')==='true';rs.forEach(function(r,i){if(i>=5)r.hidden=o});bt.setAttribute('aria-expanded',o?'false':'true');bt.textContent=o?lab():'收起來'};
 var w=t.closest('.tw')||t;w.parentNode.insertBefore(bt,w.nextSibling)})})();
+(function(){var d=document,m=d.querySelector('.shm'),c=d.querySelector('.shc'),n=d.querySelector('.shn');if(!c)return;function say(t){if(m)m.textContent=t}c.addEventListener('click',function(){var u=c.getAttribute('data-u');function fb(){var i=d.createElement('input');i.value=u;i.setAttribute('readonly','');i.style.cssText='width:100%;margin-top:6px';if(m){m.textContent='請長按下面的網址複製：';m.appendChild(i)}i.focus();i.select()}try{navigator.clipboard.writeText(u).then(function(){say('已複製連結，可以貼到 LINE 群組或臉書。')},fb)}catch(x){fb()}});if(n&&navigator.share){n.hidden=false;n.addEventListener('click',function(){navigator.share({title:n.getAttribute('data-t'),url:n.getAttribute('data-u')}).catch(function(){})})}})();
 
 (function(){var d=document,h=d.documentElement,W=window,RM=W.matchMedia&&W.matchMedia('(prefers-reduced-motion: reduce)').matches;
 d.addEventListener('touchstart',function(){},{passive:true});
@@ -26,7 +82,9 @@ fit();scr();var rz;W.addEventListener('resize',function(){clearTimeout(rz);rz=se
 if(d.fonts&&d.fonts.ready)d.fonts.ready.then(function(){fit();scr()});
 function sbSet(s,o){s.classList.toggle('clip',o);if(s._bt){s._bt.setAttribute('aria-expanded',o?'false':'true');s._bt.textContent=o?'展開全部':'收起來'}}
 (function(){var H=W.innerHeight||800,lim=Math.max(420,Math.round(H*0.75));
-[].forEach.call(d.querySelectorAll('.sb'),function(s){if(s.scrollHeight<=lim*1.35||s.querySelector('input[type=search],select'))return;s.style.setProperty('--clip',lim+'px');
+function cut(s){var L=lim,k=s.querySelector('[data-clip-after]');if(k)L=Math.max(L,Math.ceil(k.getBoundingClientRect().bottom-s.getBoundingClientRect().top)+100);return L}
+[].forEach.call(d.querySelectorAll('.sb'),function(s){var L=cut(s);if(s.scrollHeight<=L*1.35||s.querySelector('input[type=search],select'))return;s.style.setProperty('--clip',L+'px');
+ if(s.querySelector('[data-clip-after]')){var rc=function(){s.style.setProperty('--clip',cut(s)+'px')};if(d.fonts&&d.fonts.ready)d.fonts.ready.then(rc);W.addEventListener('load',rc)}
  var bt=d.createElement('button');bt.type='button';bt.className='sbm';s._bt=bt;
  bt.onclick=function(){var o=!s.classList.contains('clip');sbSet(s,o);if(o)s.parentNode.scrollIntoView({block:'start'});scr()};
  s.parentNode.insertBefore(bt,s.nextSibling);sbSet(s,true)})})();
