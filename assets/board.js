@@ -3,7 +3,7 @@ if(im.length<2||matchMedia('(prefers-reduced-motion: reduce)').matches)return;
 addEventListener('load',function(){[].forEach.call(im,function(x){if(!x.getAttribute('src'))x.src=x.getAttribute('data-src')});
 setInterval(function(){if(document.hidden)return;im[i].classList.remove('on');i=(i+1)%im.length;im[i].classList.add('on');var x=im[i],a=c.querySelectorAll('a');
 a[0].textContent=x.getAttribute('data-c');a[0].href=x.getAttribute('data-u');a[1].textContent=x.getAttribute('data-l');a[1].href=x.getAttribute('data-lu')},7000)})})();
-(function(){var M={"house": "house", "buy": "house", "school": "school", "trends": "data", "finance": "money", "howbuy": "house", "impact": "money", "tender": "money", "speed": "gov", "policy": "gov", "council": "gov", "leader": "gov", "voice": "gov", "pop-change": "data", "numbers": "data", "radar": "data", "words": "data", "about": "data"},h=location.hash.slice(1),p=document.documentElement.getAttribute('data-page');
+(function(){var M={"house": "house", "buy": "house", "school": "school", "trends": "data", "team": "gov", "finance": "money", "howbuy": "house", "impact": "money", "tender": "money", "speed": "gov", "policy": "gov", "council": "gov", "leader": "gov", "voice": "gov", "pop-change": "data", "numbers": "data", "radar": "data", "words": "data", "about": "data"},h=location.hash.slice(1),p=document.documentElement.getAttribute('data-page');
 if(p==='home'&&M[h]){location.replace(M[h]+'/#'+h)}})();
 (function(){var d=document;[].forEach.call(d.querySelectorAll('main section .sb table'),function(t){if(t.id||t.closest('details')||t.closest('.trc'))return;var b=t.tBodies[0];if(!b)return;
 var rs=[].slice.call(b.rows);if(rs.length<=7)return;function lab(){return '看全部 '+rs.length+' 列'}
